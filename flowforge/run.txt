@@ -1,0 +1,27 @@
+
+cd (disk):\folder where project is
+
+after this 
+
+dir docker-compose.yml
+
+after this 
+
+docker compose config
+
+after this 
+
+docker compose up --build
+
+
+In your browser, go to:
+
+http://localhost:5173/
+
+Backend API:
+
+http://localhost:8000/
+
+Interactive API documentation:
+
+http://localhost:8000/docs
