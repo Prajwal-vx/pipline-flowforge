@@ -5,7 +5,8 @@ services:
       POSTGRES_DB: flowforge
       POSTGRES_USER: flowforge
       POSTGRES_PASSWORD: flowforge
-    ports: ["5432:5432"]
+    # bind to localhost to avoid exposing Postgres to the host network in shared environments
+    ports: ["127.0.0.1:5432:5432"]
     volumes: ["postgres_data:/var/lib/postgresql/data"]
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U flowforge -d flowforge"]
@@ -14,7 +15,8 @@ services:
       retries: 10
   redis:
     image: redis:8-alpine
-    ports: ["6379:6379"]
+    # bind to localhost to avoid exposing Redis to the host network in shared environments
+    ports: ["127.0.0.1:6379:6379"]
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -35,7 +37,9 @@ services:
     ports: ["5173:5173"]
     volumes: ["./frontend:/app", "/app/node_modules"]
     environment:
-      VITE_API_URL: http://localhost:8000
+      # When running in docker-compose, use the backend service hostname so the frontend container
+      # can reach the backend (localhost inside a container refers to the container itself).
+      VITE_API_URL: http://backend:8000
     depends_on: [backend]
 volumes:
   postgres_data:
